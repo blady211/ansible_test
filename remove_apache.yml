@@ -1,0 +1,21 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+
+  - name: update repository index by Marcin
+    apt:
+      update_cache: yes
+
+  - name: Remove apache2 package by Marcin
+    apt:
+      name: apache2
+#state absent means remove package
+      state: absent
+
+  - name: Remove php support for apache
+    apt:
+      name: libapache2-mod-php
+      state: absent

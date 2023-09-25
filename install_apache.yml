@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: false
+  tasks:
+
+  - name: update repository index by Marcin
+    apt:
+      update_cache: yes
+
+  - name: install apache2 package by Marcin
+    apt:
+      name: apache2
+      state: latest
+
+  - name: add php support for apache
+    apt:
+      name: libapache2-mod-php
+      state: latest
