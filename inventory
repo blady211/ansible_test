@@ -1,3 +1,10 @@
+[web_servers]
 marcin_nod1@192.168.48.201
+
+[db_servers]
 marcin_nod2@192.168.48.202
+marcin_nod3@192.168.48.203
+
+[file_servers]
+marcin_nod3@192.168.48.203
 

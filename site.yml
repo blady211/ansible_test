@@ -1,0 +1,80 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  pre_tasks:
+
+  - name: install updates ( CEntos )
+    tags: always
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: Install updates ( UBUNTU )
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: true
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: web_servers
+  become: true
+  gather_facts: true
+  tasks:
+
+  - name: Install apache and php for ubuntu servers
+    tags: apache,apache2,ubuntu
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+#  - name: Checking what kind of Distribution we test
+#    shell: grep -Ei "^name=|^version_id" /etc/os-release
+#    register: response
+#  - debug: msg="{{ response.stdout }}"
+
+  - name: install apache and php for Centos servers
+    tags: apache,centos,httpd
+    yum:
+      name:
+        - httpd
+        - php
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+#      udpate_cache: yes
+#    when: ansible_distribution  =="Ubuntu"
+
+- hosts: db_servers
+  become: true
+  gather_facts: true
+  tasks: 
+
+  - name: Install maria db CEntos
+    tags: centos,db,mariadb
+    yum:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: Install maria db  Ubuntu
+    tags: db,maria,ubuntu
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: install samba package
+    tags: samba
+    package:
+      name: samba
+      state:  latest

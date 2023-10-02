@@ -5,47 +5,28 @@
   gather_facts: true
   tasks:
 
-  - name: Checking what kind of Distribution we test
-    shell: grep -Ei "^name=|^version_id" /etc/os-release
-    register: response
-  - debug: msg="{{ response.stdout }}"
-
-  - name: update repository index by Marcin
+  - name: Install apache and php for ubuntu servers
     apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
       update_cache: yes
-    when: ansible_distribution  =="Ubuntu"
+    when: ansible_distribution == "Ubuntu"
 
-  - name: install apache2 package by Marcin
-    apt:
-      name: apache2
-      state: latest
-    when: ansible_distribution =="Ubuntu"
+#  - name: Checking what kind of Distribution we test
+#    shell: grep -Ei "^name=|^version_id" /etc/os-release
+#    register: response
+#  - debug: msg="{{ response.stdout }}"
 
-  - name: add php support for apache
-    apt:
-      name: libapache2-mod-php
-      state: latest
-    when: ansible_distribution =="Ubuntu"
-
-
-  - name: Checking what kind of Distribution we test
-    shell: grep -Ei "^name=|^version_id" /etc/os-release
-    register: response
-  - debug: msg="{{ response.stdout }}"
-
-  - name: update repository index by Marcin
+  - name: install apache and php for Centos servers
     dnf:
-      update_cache: yes
-    when: ansible_distribution  =="CEntOS"
-
-  - name: install apache2 package by Marcin
-    dnf:
-      name: httpd
+      name:
+        - httpd
+        - php
       state: latest
-    when: ansible_distribution =="CentOS"
+    when: ansible_distribution == "CentOS"
 
-  - name: add php support for apache
-    dnf:
-      name: php
-      state: latest
-    when: ansible_distribution =="CentOS"
+#      udpate_cache: yes
+#    when: ansible_distribution  =="Ubuntu"
+
