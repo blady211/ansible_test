@@ -1,5 +1,6 @@
 [web_servers]
-marcin_nod1@192.168.48.201
+#marcin_nod1@192.168.48.201
+marcin_nod3@192.168.48.203
 
 [db_servers]
 marcin_nod2@192.168.48.202

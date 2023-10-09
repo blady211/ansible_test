@@ -1,0 +1,48 @@
+---
+
+- hosts: all
+  become: true
+  gather_facts: true
+  pre_tasks:
+
+  - name: install updates ( CEntos )
+    tags: always
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: install updates ( Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+#      state: present
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Crete Ansible user Simone
+    tags: always
+    user:
+      name: simone
+      groups: root
+
+  - name: add ssh key for Asnible user Simone
+    tags: always
+    authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC11ZDI1NTE5AAAAIKOLfR1E/3MRE0pHGay00tUP1G23NOGwUEBzgoF29OoZ Ansible_new"
+
+  - name: add sudoers file for Simone use
+    tags: always
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440
+

@@ -1,0 +1,26 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create user simone
+    tags: always
+    user:
+      name: simone
+      groups: root
+
+
+  - name: ass ssh for simone
+    tags: always
+    authorized_key:
+      user: simone
+      state: present
+      key: "{{ lookup('file', '/home/marcin_master/.ssh/ansible.pub') }}"
+  
+  - name: add sudoers file for simone
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root

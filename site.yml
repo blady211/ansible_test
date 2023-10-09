@@ -8,23 +8,25 @@
   - name: install updates ( CEntos )
     tags: always
     yum:
-      update_only: yes
       update_cache: yes
     when: ansible_distribution == "CentOS"
 
-  - name: Install updates ( UBUNTU )
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for Ansible user Simone
     tags: always
-    apt:
-      upgrade: dist
-      update_cache: true
-    when: ansible_distribution == "Ubuntu"
+    authorized_key:
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC11ZDI1NTE5AAAAIKOLfR1E/3MRE0pHGay00tUP1G23NOGwUEBzgoF29OoZ Ansible_new"
 
 - hosts: workstations
   become: true
   tasks:
-  
+
   - name: install unzip
-    package: 
+    package:
       name: unzip
 
   - name: install terraform
@@ -57,12 +59,21 @@
 
   - name: install apache and php for Centos servers
     tags: apache,centos,httpd
-    yum:
+    dnf:
       name:
         - httpd
         - php
       state: latest
     when: ansible_distribution == "CentOS"
+
+
+  - name: start services like ( httpd for Centos )
+    tags: apache,centos,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+#    when: ansible_distribution == "CentOs"
 
 
   - name: Copy file to server ( html file)
